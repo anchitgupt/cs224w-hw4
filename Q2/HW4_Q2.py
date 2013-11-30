@@ -1,31 +1,26 @@
-# -*- coding: utf-8 -*-
-# <nbformat>3.0</nbformat>
-
-# <headingcell level=1>
-
 # Homework 4, Question 2
 
-# <codecell>
+
 
 import networkx as nx
 from collections import defaultdict,deque
 from random import choice,shuffle
 from ggplot import *
 
-# <markdowncell>
+
 
 # Create a small test graph based on lecture slides.
 
-# <codecell>
+
 
 tg = nx.Graph()
 tg.add_edges_from([(0,1),(0,2),(0,3),(0,4),(1,2),(1,5),(2,5),(3,6),(3,7),(4,7),(6,8),(5,8),(6,9),(7,9),(8,10),(9,10)])
 
-# <markdowncell>
+
 
 # Perform a BFS from a vertex s
 
-# <codecell>
+
 
 def BFS(g,v):
     # Book-keeping stuff
@@ -57,11 +52,11 @@ def BFS(g,v):
                     queue.append(nbr)
     return sigma,induced
 
-# <markdowncell>
+
 
 # Now that we have the induced tree, calculate dependency ($\delta_s$) of an edge $\{v,w\}$ recursively.
 
-# <codecell>
+
 
 def dependency(v,w,induced,sigma):
     if induced.has_edge(v,w):
@@ -73,7 +68,7 @@ def dependency(v,w,induced,sigma):
     else:
         return 0.0
 
-# <codecell>
+
 
 def dependencies(graph):
     dependencies = defaultdict(list)
@@ -87,7 +82,7 @@ def dependencies(graph):
 
 # Algorithm 1: Exact Betweenness
 
-# <codecell>
+
 
 def exact_betweenness(graph):
     betweenness = defaultdict(float) 
@@ -98,11 +93,15 @@ def exact_betweenness(graph):
             betweenness[(v,w)] += d
     return dict(betweenness)
 
-# <codecell>
+# <headingcell level=4>
+
+# For verification, compare between above code and networkx
+
+
 
 exact_betweenness(tg)
 
-# <codecell>
+
 
 nx.edge_betweenness_centrality(tg,normalized=False,weight=1)
 
@@ -110,7 +109,7 @@ nx.edge_betweenness_centrality(tg,normalized=False,weight=1)
 
 # Algorithm 2: Approximate Betweennes
 
-# <codecell>
+
 
 def approx_betweenness(graph,c=5,s=10):
     nodes = graph.nodes()
@@ -135,64 +134,35 @@ def approx_betweenness(graph,c=5,s=10):
     
     return {edge:((N/k[edge])*betweenness[edge]) for edge in graph.edges_iter()}
 
-# <codecell>
-
-approx_betweenness(tg,s=1)
-
 # <headingcell level=2>
 
 # Run on preferential attachment graph
 
-# <codecell>
+
 
 g = nx.barabasi_albert_graph(1000,4)
 
-# <codecell>
+
 
 exact_b = exact_betweenness(g)
-
-# <codecell>
-
 approx_b = approx_betweenness(g)
 
-# <codecell>
 
-approx_exact_b = approx_betweenness(g,s=1)
-
-# <codecell>
-
-nx_b = nx.betweenness_centrality(g,normalized=False,weight=1)
-
-# <codecell>
 
 x = range(len(exact_b))
-
-# <codecell>
-
 y1 = sorted(exact_b.values(), reverse=True)
-
-# <codecell>
-
 y2 = sorted(approx_b.values(), reverse=True)
 
-# <codecell>
 
-y3 = sorted(approx_exact_b.values(), reverse=True)
 
-# <codecell>
-
-y4 = sorted(nx_b.values(), reverse=True)
-
-# <codecell>
-
-p=plt.plot(x,y1,label="Exact")
-p=plt.plot(x,y2,'--',label="Approximate")
+plt.plot(x,y1,label="Exact")
+plt.plot(x,y2,'--',label="Approximate")
 plt.yscale('log')
 plt.legend()
 plt.title("Comparison of exact and approximate betweenness centrality")
 plt.xlabel("Centrality ranking")
-plt.ylabel("Centrality value")
+p=plt.ylabel("Centrality value")
 
-# <codecell>
+
 
 
