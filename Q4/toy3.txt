@@ -1,0 +1,20 @@
+# Toy Graph 3
+# As b varies from 0 to 10, you should see that
+# r = [4, 9, 12, 14, 15, 15, 15, 15, 15, 15, 15] for TwoStepGreedy
+# NodeId	NodeId
+0	1
+0	5
+0	6
+1	2
+1	3
+2	3
+2	4
+3	4
+4	7
+7	8
+8	9
+9	10
+10	11
+7	12
+12	13
+13	14
